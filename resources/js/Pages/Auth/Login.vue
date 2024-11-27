@@ -8,6 +8,9 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
+    errors: {
+        type: Object
+    },
     canResetPassword: {
         type: Boolean,
     },
@@ -19,12 +22,22 @@ defineProps({
 const form = useForm({
     email: '',
     password: '',
+    notAdmin: false,
     remember: false,
 });
 
 const submit = () => {
+
+    // check if admin on fe
+    if (!(form.email === 'admin@admin.com' && form.password === 'password')) {
+        form.notAdmin = true;
+        return;
+    } 
+
     form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+        onFinish: () => {
+            form.reset('password')
+        },
     });
 };
 </script>
@@ -37,7 +50,10 @@ const submit = () => {
             {{ status }}
         </div>
 
+        <InputError v-if="form.notAdmin || errors.notAdmin" class="mt-2" message="Not admin" />
+
         <form @submit.prevent="submit">
+
             <div>
                 <InputLabel for="email" value="Email" />
 

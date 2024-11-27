@@ -7,15 +7,20 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-    name: '',
+    firstname: '',
+    lastname: '',
     email: '',
+    avatar: '',
     password: '',
     password_confirmation: '',
 });
 
 const submit = () => {
     form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onFinish: () => {
+            document.getElementById('avatarUrl').value = null;
+            form.reset('firstname', 'lastname', 'email', 'avatar' ,'password', 'password_confirmation')
+        }
     });
 };
 </script>
@@ -26,19 +31,42 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="firstname" value="Firstname" />
 
                 <TextInput
-                    id="name"
+                    id="firstname"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.name"
+                    v-model="form.firstname"
                     required
                     autofocus
                     autocomplete="name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.firstname" />
+            </div>
+
+            <div>
+                <InputLabel for="lastname" value="Lastname" />
+
+                <TextInput
+                    id="lastname"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.lastname"
+                    required
+                    autocomplete="name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.lastname" />
+            </div>
+
+            <div>
+                <InputLabel for="avatar" value="Avatar" />
+
+                <input id="avatarUrl" type="file" class="form-control form-control-xl" accept="image/*" @change="form.avatar = $event.target.files[0]">
+
+                <InputError class="mt-2" :message="form.errors.avatar" />
             </div>
 
             <div class="mt-4">
