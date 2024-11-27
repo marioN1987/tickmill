@@ -21,6 +21,6 @@ class Transaction extends Model
 
     public function client(): HasOne
     {
-        return $this->hasOne(User::class, 'id', 'client_id');
+        return $this->hasOne(Client::class, 'id', 'client_id');
     }
 }
