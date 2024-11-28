@@ -1,8 +1,6 @@
 <script setup>
+import { computed, onMounted } from 'vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-// import DeleteUserForm from './Partials/DeleteUserForm.vue';
-// import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-// import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
@@ -34,12 +32,32 @@ const form = useForm({
     firstname: currentClient.firstname,
     lastname: currentClient.lastname,
     email: currentClient.email,
-    avatar: ''
+    avatar: currentClient.avatar,
+    fileSizeError: false
 });
 
-const submit = () => {
-    console.log(form);
+const hasAvatar = computed(() => {
+    if (form.avatar instanceof String) {
+        return form.avatar.includes('storage/path/public/') ? false : true;
+    }
+})
 
+// check file size to not exceed 2mb
+const checkSize = (currFile) => {
+    const fileLimit = 2048; // limit the file size goes here
+    const fileSize = currFile.size; 
+    const fileSizeInKB = (fileSize/1024); // this would be converted byte into kilobyte
+
+    if (fileSizeInKB < fileLimit){
+        form.avatar = currFile;
+        form.fileSizeError = false;
+    } else {
+        form.fileSizeError = true;
+        document.getElementById('avatarUrl').value = null;
+    }
+}
+
+const submit = () => {
     form.post(route('clients.update', {id: props.client.id}));
 };
 </script>
@@ -107,13 +125,17 @@ const submit = () => {
                     </div>
 
                     <div>
-                        <InputLabel for="avatar" value="Avatar" />
+                        <template v-if="hasAvatar">
+                            <InputLabel for="avatar" value="Avatar" />
+    
+                            <img :src="`storage/avatars/${form.avatar}`" width="100" height="100"/>
+                        </template>
 
-                        <img :src="image" width="100" height="100"/>
+                        <InputLabel for="avatar" value="Choose new avatar" />
 
-                        <InputLabel class="pt-4" for="avatar" value="Choose new avatar" />
+                        <input id="avatarUrl" type="file" class="form-control form-control-xl pt-1" accept="image/*" @change="checkSize($event.target.files[0])">
 
-                        <input id="avatarUrl" type="file" class="form-control form-control-xl pt-1" accept="image/*" @change="form.avatar = $event.target.files[0]">
+                        <InputError v-if="form.fileSizeError" class="mt-2" message="File is too big, select smaller one"/>
 
                         <InputError class="mt-2" :message="form.errors.avatar" />
                     </div>
@@ -153,71 +175,3 @@ const submit = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-
-<!-- <template>
-    <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                Profile Information
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Update your account's profile information and email address.
-            </p>
-        </header>
-
-        {{ client }}
-
-        <form
-            @submit.prevent="form.patch(route('profile.edit'))"
-            class="mt-6 space-y-6"
-        >
-            <div>
-                 <InputLabel for="firstname" value="Firstname" />
-
-                <TextInput
-                    id="firstname"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.firstname"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.firstname" />
-            </div>
-
-            <div>
-                <InputLabel for="lastname" value="Lastname" />
-
-                <TextInput
-                    id="lastname"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.lastname"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.lastname" />
-            </div>
-
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-        </form>
-    </section>
-</template> -->
