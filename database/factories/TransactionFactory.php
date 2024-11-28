@@ -17,7 +17,8 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'client_id' => fake()->numberBetween(0, 50),
+            // each time create a dummy transaction entry creates also a client and assigns the id to transaction table as foreign key
+            'client_id' => Client::factory()->create()->id,
             'amount' => fake()->randomFloat(2, 10, 200)
         ];
     }

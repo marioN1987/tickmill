@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
         ]);
 
-        Client::factory(50)->create();
         Transaction::factory(50)->create();
     }
 }
