@@ -1,8 +1,5 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-// import DeleteUserForm from './Partials/DeleteUserForm.vue';
-// import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-// import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
@@ -18,7 +15,41 @@ defineProps({
     },
 });
 
+const hasAvatar = (filename) => {
+    return filename.includes('storage/path/public/') ? false : true;
+};
+
 </script>
+
+<style lang="scss" scoped>
+    .table-container {
+        overflow: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate; 
+        border-spacing: 1em;
+
+        @media (max-width: 992px) {
+            width: 700px;
+        }
+    }
+
+    table td {
+        text-align: center;
+    }
+
+    .actions {
+        display: flex;
+        column-gap: 10px;
+        justify-content: center;
+    }
+
+    tr + tr {
+        border-top: 1px solid red;
+    }
+</style>
 
 <template>
     <Head title="Profile" />
@@ -33,29 +64,53 @@ defineProps({
         </template>
 
         <div class="py-6">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-wrap gap-6">
-                <div class="user" v-for="user in allClients">
-                    <p>Name: {{ user.firstname + ' ' + user.lastname}}</p>
-                    <p>Email: {{ user.email }}</p>
-                    <div class="actions flex gap-12">
-                        <Link
-                            :href="route('clients.edit', {id: user.id})"
-                            as="button"
-                            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Edit
-                        </Link>
-    
-                        <Link
-                            :href="route('clients.delete', {id: user.id})"
-                            method="DELETE"
-                            as="button"
-                            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Delete
-                        </Link>
-                    </div>
-                </div>
+            <div class="table-container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <table class="table-auto">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Firstname</th>
+                            <th scope="col">Lastname</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Avatar</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(client, index) in allClients" :key="index">
+                            <th scope="row">{{ index + 1 }}</th>
+                            <td>{{ client.firstname }}</td>
+                            <td>{{ client.lastname }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>
+                                <template v-if="hasAvatar(client.avatar)">
+                                    <img class="block h-10 w-auto m-auto" :src="`storage/avatars/${client.avatar}`" alt="Logo" />
+                                </template>
+                                <template v-else>
+                                    <p>No avatar</p>
+                                </template>
+                            </td>
+                            <td class="actions">
+                                <Link
+                                    :href="route('clients.edit', {id: client.id})"
+                                    as="button"
+                                    class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
+                                >
+                                    Edit
+                                </Link>
+            
+                                <Link
+                                    :href="route('clients.delete', {id: client.id})"
+                                    method="DELETE"
+                                    as="button"
+                                    class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
+                                >
+                                    Delete
+                                </Link>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </AuthenticatedLayout>
