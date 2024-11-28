@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ClientUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +48,46 @@ class ClientController extends Controller
             'client' => $client,
             'status' => session('status'),
         ]);
+    }
+
+    public function createPage(Request $request): Response
+    {
+        return Inertia::render('Clients/Create');
+    }
+
+    public function create(Request $request): RedirectResponse
+    {
+        // dd($request);
+        //proper custom validation messages
+        $request->validate([
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.Client::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ],
+        [
+            'avatar.required' => 'Please select avatar!',
+            'avatar.uploaded' => 'Failed to upload an image. The image maximum size is 2MB.'
+        ]);
+
+        //save avatar image in public storage
+        $image = $request->file('avatar');
+        $date = Carbon::now()->format('Y-m-d');
+        $filename = $date.'/'.$request->avatar->getClientOriginalName();
+        $image->storeAs('avatars', $filename, 'public');
+        
+        // save client details in db
+        $user = Client::create([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'avatar' => $filename,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect(route('clients.list'));
+        // return Redirect::route('clients.list');
     }
 
     /**

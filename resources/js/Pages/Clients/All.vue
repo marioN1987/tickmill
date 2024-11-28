@@ -61,6 +61,13 @@ const hasAvatar = (filename) => {
             >
                 Clients list
             </h2>
+            <Link
+                :href="route('clients.createPage')"
+                as="button"
+                class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
+            >
+                Create client
+            </Link>
         </template>
 
         <div class="py-6">

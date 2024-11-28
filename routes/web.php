@@ -21,6 +21,8 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/list', [ClientController::class, 'list'])->name('clients.list');
     Route::get('/edit', [ClientController::class, 'edit'])->name('clients.edit');
+    Route::get('/create', [ClientController::class, 'createPage'])->name('clients.createPage');
+    Route::post('/create', [ClientController::class, 'create'])->name('clients.create');
     Route::post('/update', [ClientController::class, 'update'])->name('clients.update');
     Route::delete('/delete', [ClientController::class, 'delete'])->name('clients.delete');
 });

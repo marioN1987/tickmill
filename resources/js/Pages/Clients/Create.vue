@@ -1,46 +1,22 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
-const props = defineProps({
-    client: {
-        type: Object
-    },
-
-    image: {
-        type: String,
-    },
-
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
-
-const currentClient = props.client;
-
 const form = useForm({
-    firstname: currentClient.firstname,
-    lastname: currentClient.lastname,
-    email: currentClient.email,
-    avatar: currentClient.avatar,
-    fileSizeError: false
+    firstname: '',
+    lastname: '',
+    email: '',
+    avatar: '',
+    password: '',
+    password_confirmation: '',
 });
-
-const hasAvatar = computed(() => {
-    if (typeof form.avatar === 'string' || form.avatar instanceof String) {
-        return form.avatar.includes('storage/path/public/') ? false : true;
-    }
-})
 
 // check file size to not exceed 2mb
 const checkSize = (currFile) => {
@@ -53,11 +29,12 @@ const checkSize = (currFile) => {
         form.fileSizeError = false;
     } else {
         form.fileSizeError = true;
+        document.getElementById('avatarUrl').value = null;
     }
 }
 
 const submit = () => {
-    form.post(route('clients.update', {id: props.client.id}));
+    form.post(route('clients.create'));
 };
 </script>
 
@@ -69,7 +46,7 @@ const submit = () => {
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Clients Edit
+                Clients Create
             </h2>
         </template>
 
@@ -124,13 +101,7 @@ const submit = () => {
                     </div>
 
                     <div>
-                        <template v-if="hasAvatar">
-                            <InputLabel for="avatar" value="Avatar" />
-    
-                            <img :src="`storage/avatars/${form.avatar}`" width="100" height="100"/>
-                        </template>
-
-                        <InputLabel for="avatar" value="Choose new avatar" />
+                        <InputLabel for="avatar" value="Choose avatar" />
 
                         <input id="avatarUrl" type="file" class="form-control form-control-xl pt-1" accept="image/*" @change="checkSize($event.target.files[0])">
 
@@ -139,12 +110,48 @@ const submit = () => {
                         <InputError class="mt-2" :message="form.errors.avatar" />
                     </div>
 
+                    <div class="mt-4">
+                        <InputLabel for="password" value="Password" />
+
+                        <TextInput
+                            id="password"
+                            type="password"
+                            class="mt-1 block w-full"
+                            v-model="form.password"
+                            required
+                            autocomplete="new-password"
+                        />
+
+                        <InputError class="mt-2" :message="form.errors.password" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel
+                            for="password_confirmation"
+                            value="Confirm Password"
+                        />
+
+                        <TextInput
+                            id="password_confirmation"
+                            type="password"
+                            class="mt-1 block w-full"
+                            v-model="form.password_confirmation"
+                            required
+                            autocomplete="new-password"
+                        />
+
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.password_confirmation"
+                        />
+                    </div>
+
                     <div class="mt-4 flex">
                         <PrimaryButton
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
                         >
-                            Update
+                            Create
                         </PrimaryButton>
                         
                         <Link
@@ -154,20 +161,6 @@ const submit = () => {
                         >
                             Back
                         </Link>
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p
-                                v-if="form.recentlySuccessful"
-                                class="text-sm text-gray-600"
-                            >
-                                Saved.
-                            </p>
-                        </Transition>
                     </div>
                 </form>
             </div>
