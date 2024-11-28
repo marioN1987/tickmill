@@ -46,7 +46,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.firstname" />
             </div>
 
-            <div>
+            <div class="mt-4">
                 <InputLabel for="lastname" value="Lastname" />
 
                 <TextInput
@@ -61,7 +61,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.lastname" />
             </div>
 
-            <div>
+            <div class="mt-4">
                 <InputLabel for="avatar" value="Avatar" />
 
                 <input id="avatarUrl" type="file" class="form-control form-control-xl" accept="image/*" @change="form.avatar = $event.target.files[0]">
@@ -121,13 +121,6 @@ const submit = () => {
             </div>
 
             <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Already registered?
-                </Link>
-
                 <PrimaryButton
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
