@@ -25,7 +25,6 @@ class ClientUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(Client::class)->ignore($this->user()->id),
             ]
         ];
     }
