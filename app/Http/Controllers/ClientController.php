@@ -38,14 +38,12 @@ class ClientController extends Controller
         // check if id exists in db
         $request->validate([
              'id' => 'required|integer|exists:'.Client::class.',id'
-         ]);
+        ]);
             
         $client = Client::where('id', $request->id)->first();
 
         return Inertia::render('Clients/Edit', [
             'client' => $client,
-            // use asset helper method to get avatar image from storage
-            'image' => asset('storage/avatars/'.$client->avatar),
             'status' => session('status'),
         ]);
     }
