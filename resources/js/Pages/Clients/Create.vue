@@ -15,14 +15,15 @@ const form = useForm({
     email: '',
     avatar: '',
     password: '',
+    fileSizeError: false,
     password_confirmation: '',
 });
 
 // check file size to not exceed 2mb
 const checkSize = (currFile) => {
-    const fileLimit = 2048; // limit the file size goes here
+    const fileLimit = 2048;
     const fileSize = currFile.size; 
-    const fileSizeInKB = (fileSize/1024); // this would be converted byte into kilobyte
+    const fileSizeInKB = (fileSize/1024); // convert byte into kilobyte
 
     if (fileSizeInKB < fileLimit){
         form.avatar = currFile;
@@ -32,6 +33,8 @@ const checkSize = (currFile) => {
         document.getElementById('avatarUrl').value = null;
     }
 }
+
+const isFormValid = computed(() => !form.fileSizeError && !Object.keys(form.errors).length > 0);
 
 const submit = () => {
     form.post(route('clients.create'));
@@ -107,7 +110,7 @@ const submit = () => {
 
                         <InputError v-if="form.fileSizeError" class="mt-2" message="File is too big, select smaller one"/>
 
-                        <InputError class="mt-2" :message="form.errors.avatar" />
+                        <InputError v-else-if="!form.avatar" class="mt-2" :message="form.errors.avatar" />
                     </div>
 
                     <div class="mt-4">
@@ -148,8 +151,7 @@ const submit = () => {
 
                     <div class="mt-4 flex">
                         <PrimaryButton
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
+                            :disabled="!isFormValid"
                         >
                             Create
                         </PrimaryButton>

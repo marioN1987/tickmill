@@ -26,7 +26,8 @@ const hasAvatar = (filename) => {
 
 <style lang="scss" scoped>
     .table-container {
-        overflow: auto;
+        overflow-y: hidden;
+        overflow-x: auto;
     }
 
     table {

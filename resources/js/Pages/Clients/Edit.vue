@@ -44,9 +44,9 @@ const hasAvatar = computed(() => {
 
 // check file size to not exceed 2mb
 const checkSize = (currFile) => {
-    const fileLimit = 2048; // limit the file size goes here
+    const fileLimit = 2048;
     const fileSize = currFile.size; 
-    const fileSizeInKB = (fileSize/1024); // this would be converted byte into kilobyte
+    const fileSizeInKB = (fileSize/1024); //convert byte into kilobyte
 
     if (fileSizeInKB < fileLimit){
         form.avatar = currFile;
@@ -55,6 +55,8 @@ const checkSize = (currFile) => {
         form.fileSizeError = true;
     }
 }
+
+const isFormValid = computed(() => !form.fileSizeError && !Object.keys(form.errors).length > 0);
 
 const submit = () => {
     form.post(route('clients.update', {id: props.client.id}));
@@ -141,8 +143,7 @@ const submit = () => {
 
                     <div class="mt-4 flex">
                         <PrimaryButton
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
+                            :disabled="!isFormValid"
                         >
                             Update
                         </PrimaryButton>
@@ -154,20 +155,6 @@ const submit = () => {
                         >
                             Back
                         </Link>
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p
-                                v-if="form.recentlySuccessful"
-                                class="text-sm text-gray-600"
-                            >
-                                Saved.
-                            </p>
-                        </Transition>
                     </div>
                 </form>
             </div>
