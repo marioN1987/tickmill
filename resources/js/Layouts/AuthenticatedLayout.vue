@@ -171,8 +171,15 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('clients.edit')">
-                                Profile
+                            <ResponsiveNavLink 
+                                :href="route('clients.list')"
+                            >
+                                Cients
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink 
+                                :href="route('transactions.list')"
+                            >
+                                Transactions
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"
