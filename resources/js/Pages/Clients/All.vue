@@ -2,13 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import Pagination from '@/Components/Pagination.vue';
 
 defineProps({
     mustVerifyEmail: {
         type: Boolean,
     },
     allClients: {
-        type: Array
+        type: [Object, Array]
     },
     status: {
         type: String,
@@ -16,7 +17,9 @@ defineProps({
 });
 
 const hasAvatar = (filename) => {
-    return filename.includes('storage/path/public/') ? false : true;
+    if (typeof filename === 'string' || filename instanceof String) {
+        return filename.includes('storage/path/public/') ? false : true;
+    }
 };
 
 </script>
@@ -84,7 +87,7 @@ const hasAvatar = (filename) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(client, index) in allClients" :key="index">
+                        <tr v-for="(client, index) in allClients.data" :key="index">
                             <th scope="row">{{ index + 1 }}</th>
                             <td>{{ client.firstname }}</td>
                             <td>{{ client.lastname }}</td>
@@ -118,6 +121,7 @@ const hasAvatar = (filename) => {
                         </tr>
                     </tbody>
                 </table>
+                <Pagination class="mt-4" :links="allClients.links"/>
             </div>
         </div>
     </AuthenticatedLayout>

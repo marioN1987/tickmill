@@ -23,7 +23,9 @@ class ClientController extends Controller
      */
     public function list(Request $request): Response
     {
-        $allClients = Client::all();
+        $allClients = Client::paginate(10);
+
+        //dd($allClients);
 
         return Inertia::render('Clients/All', [
             'allClients' => $allClients,
