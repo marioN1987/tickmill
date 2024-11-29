@@ -43,7 +43,18 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'amount' => 'required|numeric|gt:0',
+            'clientId' => 'required|integer|exists:'.Client::class.',id'
+        ]);
+
+        // save transaction details in db
+        Transaction::create([
+            'client_id' => $request->clientId,
+            'amount' => $request->amount
+        ]);
+
+        return redirect(route('transactions.list'));
     }
 
     /**
@@ -61,7 +72,7 @@ class TransactionController extends Controller
     {
         // check if id exists in db
         $request->validate([
-            'id' => 'required|integer|exists:'.Transaction::class.',client_id'
+            'id' => 'required|integer|exists:'.Transaction::class.',id'
         ]);
         
         $transactionAndClientDetails = [];
@@ -79,16 +90,35 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        // check if id exists in db
+        $request->validate([
+            'id' => 'required|integer|exists:'.Transaction::class.',id',
+            'amount' => 'required|numeric|gt:0'
+        ]);
+
+        $transaction = Transaction::where('id', $request->id)->first();
+        $transaction->amount = $request->amount;
+        $transaction->save();
+
+        return redirect(route('transactions.list'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(Request $request)
     {
-        //
+        // check if id exists in db
+        $request->validate([
+            'id' => 'required|integer|exists:'.Transaction::class.',id'
+        ]);
+
+        $transaction = Transaction::where('id', $request->id)->first();
+
+        $transaction->delete();
+
+        return redirect(route('transactions.list'));
     }
 }
