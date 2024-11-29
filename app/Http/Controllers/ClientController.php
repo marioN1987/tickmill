@@ -25,9 +25,7 @@ class ClientController extends Controller
     {
         $allClients = Client::paginate(10);
 
-        //dd($allClients);
-
-        return Inertia::render('Clients/All', [
+        return Inertia::render('Clients/List', [
             'allClients' => $allClients,
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -52,20 +50,19 @@ class ClientController extends Controller
         ]);
     }
 
-    public function createPage(Request $request): Response
+    public function create(Request $request): Response
     {
         return Inertia::render('Clients/Create');
     }
 
-    public function create(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        // dd($request);
         //proper custom validation messages
         $request->validate([
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.Client::class,
+            'email' => 'required|string|lowercase|email|max:255',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ],
         [
@@ -89,7 +86,6 @@ class ClientController extends Controller
         ]);
 
         return redirect(route('clients.list'));
-        // return Redirect::route('clients.list');
     }
 
     /**
