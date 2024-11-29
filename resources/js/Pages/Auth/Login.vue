@@ -7,18 +7,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
-defineProps({
-    errors: {
-        type: Object
-    },
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
-
 const form = useForm({
     email: '',
     password: '',
@@ -27,12 +15,6 @@ const form = useForm({
 });
 
 const submit = () => {
-
-    // check if admin on fe
-    if (!(form.email === 'admin@admin.com' && form.password === 'password')) {
-        form.notAdmin = true;
-        return;
-    } 
 
     form.post(route('login'), {
         onFinish: () => {
@@ -49,8 +31,6 @@ const submit = () => {
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
         </div>
-
-        <InputError v-if="form.notAdmin || errors.notAdmin" class="mt-2" message="Not admin" />
 
         <form @submit.prevent="submit">
 
@@ -97,8 +77,6 @@ const submit = () => {
             <div class="mt-4 flex items-center justify-end">
                 <PrimaryButton
                     class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
                 >
                     Log in
                 </PrimaryButton>

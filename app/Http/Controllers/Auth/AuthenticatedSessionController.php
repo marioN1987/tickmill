@@ -29,11 +29,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // check if admin on be
-        if (!($request->email === 'admin@admin.com' && $request->password === 'password')) {
-            return back()->withErrors(['notAdmin' => 'Not admin']);
-        }
-
         $request->authenticate();
 
         $request->session()->regenerate();
