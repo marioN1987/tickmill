@@ -15,9 +15,20 @@ const form = useForm({
     email: '',
     avatar: '',
     password: '',
+    previewImg: null,
     fileSizeError: false,
     password_confirmation: '',
 });
+
+// replace existing avatar and preview uploaded one
+const previewUploadedImg = (uploadedFile) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+        form.previewImg = reader.result;
+    };
+
+    reader.readAsDataURL(uploadedFile);
+};
 
 // check file size to not exceed 2mb
 const checkSize = (currFile) => {
@@ -28,8 +39,10 @@ const checkSize = (currFile) => {
     if (fileSizeInKB < fileLimit){
         form.avatar = currFile;
         form.fileSizeError = false;
+        previewUploadedImg(currFile);
     } else {
         form.fileSizeError = true;
+        form.previewImg = null;
         document.getElementById('avatarUrl').value = null;
     }
 }
@@ -37,7 +50,7 @@ const checkSize = (currFile) => {
 const isFormValid = computed(() => !form.fileSizeError && !Object.keys(form.errors).length > 0);
 
 const submit = () => {
-    form.post(route('clients.create'));
+    form.post(route('clients.store'));
 };
 </script>
 
@@ -104,7 +117,14 @@ const submit = () => {
                     </div>
 
                     <div>
-                        <InputLabel for="avatar" value="Choose avatar" />
+
+                        <template v-if="form.previewImg">
+                            <InputLabel for="avatar" value="Avatar" />
+    
+                            <img :src="form.previewImg" width="100" height="100"/>
+                        </template>
+
+                        <InputLabel class="pt-2" for="avatar" value="Upload new avatar" />
 
                         <input id="avatarUrl" type="file" class="form-control form-control-xl pt-1" accept="image/*" @change="checkSize($event.target.files[0])">
 

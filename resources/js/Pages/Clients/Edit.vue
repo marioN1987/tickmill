@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link, useForm } from '@inertiajs/vue3';
@@ -33,14 +33,25 @@ const form = useForm({
     lastname: currentClient.lastname,
     email: currentClient.email,
     avatar: currentClient.avatar,
+    previewImg: null,
     fileSizeError: false
 });
 
-const hasAvatar = computed(() => {
-    if (typeof form.avatar === 'string' || form.avatar instanceof String) {
-        return form.avatar.includes('storage/path/public/') ? false : true;
-    }
-})
+const hasAvatar = computed(() => (typeof form.avatar === 'string' || form.avatar instanceof String) && !form.avatar.includes('storage/path/public/'));
+
+// replace existing avatar and preview uploaded one
+const previewUploadedImg = (uploadedFile) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+        form.previewImg = reader.result;
+    };
+
+    reader.readAsDataURL(uploadedFile);
+};
+
+if (hasAvatar.value) {
+    form.previewImg = `/storage/avatars/${currentClient.avatar}`;
+}
 
 // check file size to not exceed 2mb
 const checkSize = (currFile) => {
@@ -51,6 +62,7 @@ const checkSize = (currFile) => {
     if (fileSizeInKB < fileLimit){
         form.avatar = currFile;
         form.fileSizeError = false;
+        previewUploadedImg(currFile);
     } else {
         form.fileSizeError = true;
     }
@@ -126,13 +138,13 @@ const submit = () => {
                     </div>
 
                     <div>
-                        <template v-if="hasAvatar">
+                        <template v-if="form.previewImg">
                             <InputLabel for="avatar" value="Avatar" />
     
-                            <img :src="`storage/avatars/${form.avatar}`" width="100" height="100"/>
+                            <img :src="form.previewImg" width="100" height="100"/>
                         </template>
 
-                        <InputLabel for="avatar" value="Choose new avatar" />
+                        <InputLabel class="pt-2" for="avatar" value="Upload new avatar" />
 
                         <input id="avatarUrl" type="file" class="form-control form-control-xl pt-1" accept="image/*" @change="checkSize($event.target.files[0])">
 
