@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link, useForm } from '@inertiajs/vue3';
 
 import InputError from '@/Components/InputError.vue';
@@ -76,8 +75,6 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Profile" />
-
     <AuthenticatedLayout>
         <template #header>
             <h2

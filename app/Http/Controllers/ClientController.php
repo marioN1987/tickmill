@@ -77,7 +77,7 @@ class ClientController extends Controller
         $image->storeAs('avatars', $filename, 'public');
         
         // save client details in db
-        $user = Client::create([
+        Client::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'avatar' => $filename,
@@ -115,7 +115,7 @@ class ClientController extends Controller
 
         $client->update();
 
-        return Redirect::route('clients.list');
+        return redirect(route('clients.list'));
     }
 
     /**
@@ -132,6 +132,6 @@ class ClientController extends Controller
 
         $client->delete();
 
-        return Redirect::route('clients.list');
+        return redirect(route('clients.list'));
     }
 }

@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
 
@@ -62,7 +61,7 @@ const hasAvatar = (filename) => {
             <Link
                 :href="route('clients.create')"
                 as="button"
-                class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
+                class="mr-1 mb-1 px-4 py-3 text-sm bg-blue-700 text-white leading-4 border rounded hover:bg-black focus:border-indigo-500 inline-block focus:text-white"
             >
                 Create client
             </Link>
@@ -97,7 +96,7 @@ const hasAvatar = (filename) => {
                                 <Link
                                     :href="route('clients.edit', {id: client.id})"
                                     as="button"
-                                    class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
+                                    class="mr-1 mb-1 px-4 py-3 text-sm bg-blue-700 text-white leading-4 border rounded hover:bg-black focus:border-indigo-500 inline-block focus:text-white"
                                 >
                                     Edit
                                 </Link>
@@ -106,7 +105,7 @@ const hasAvatar = (filename) => {
                                     :href="route('clients.delete', {id: client.id})"
                                     method="DELETE"
                                     as="button"
-                                    class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
+                                    class="mr-1 mb-1 px-4 py-3 text-sm bg-blue-700 text-white leading-4 border rounded hover:bg-black focus:border-indigo-500 inline-block focus:text-white"
                                 >
                                     Delete
                                 </Link>
