@@ -34,6 +34,12 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
+                                    :href="route('transactions.list')"
+                                    :active="route().current('transactions.list')"
+                                >
+                                    Transactions
+                                </NavLink>
+                                <NavLink
                                     :href="route('clients.list')"
                                     :active="route().current('clients.list')"
                                 >
