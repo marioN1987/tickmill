@@ -36,7 +36,7 @@ const hasAvatar = (filename) => {
         border-spacing: 1em;
 
         @media (max-width: 992px) {
-            width: 700px;
+            width: 800px;
         }
     }
 
@@ -49,15 +49,9 @@ const hasAvatar = (filename) => {
         column-gap: 10px;
         justify-content: center;
     }
-
-    tr + tr {
-        border-top: 1px solid red;
-    }
 </style>
 
 <template>
-    <Head title="Profile" />
-
     <AuthenticatedLayout>
         <template #header>
             <h2
@@ -66,7 +60,7 @@ const hasAvatar = (filename) => {
                 Clients list
             </h2>
             <Link
-                :href="route('clients.createPage')"
+                :href="route('clients.create')"
                 as="button"
                 class="border-solid rounded-md bg-black text-white py-1 px-1 text-sm"
             >
@@ -79,7 +73,6 @@ const hasAvatar = (filename) => {
                 <table class="table-auto">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col">Firstname</th>
                             <th scope="col">Lastname</th>
                             <th scope="col">Email</th>
@@ -89,13 +82,12 @@ const hasAvatar = (filename) => {
                     </thead>
                     <tbody>
                         <tr v-for="(client, index) in allClients.data" :key="index">
-                            <th scope="row">{{ index + 1 }}</th>
                             <td>{{ client.firstname }}</td>
                             <td>{{ client.lastname }}</td>
                             <td>{{ client.email }}</td>
                             <td>
                                 <template v-if="hasAvatar(client.avatar)">
-                                    <img class="block h-10 w-auto m-auto" :src="`storage/avatars/${client.avatar}`" alt="Logo" />
+                                    <img class="block h-10 w-auto m-auto" :src="`/storage/avatars/${client.avatar}`" alt="Logo" />
                                 </template>
                                 <template v-else>
                                     <p>No avatar</p>
