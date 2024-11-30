@@ -62,14 +62,11 @@ const changedValue = ($ev)=> {
                     <div>
                         <InputLabel for="amount" value="Amount" />
 
-                        <TextInput
-                            id="amount"
-                            type="number"
-                            step="any"
-                            class="mt-1 block w-full"
-                            v-model="form.amount"
-                            required
-                            autofocus
+                        <input 
+                            type="number" 
+                            class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full" 
+                            step="any" 
+                            v-model="form.amount" 
                         />
 
                         <InputError class="mt-2" :message="form.errors.amount" />

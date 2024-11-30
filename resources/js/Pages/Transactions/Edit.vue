@@ -45,7 +45,7 @@ const submit = () => {
                     class="mt-6 space-y-6"
                 >
                     <div>
-                        <InputLabel for="fullname" value="Fullname" />
+                        <InputLabel for="fullname" value="Fullname (readonly)" />
 
                         <TextInput
                             id="firstname"
@@ -57,7 +57,7 @@ const submit = () => {
                     </div>
 
                     <div>
-                        <InputLabel for="lastname" value="Lastname" />
+                        <InputLabel for="lastname" value="Lastname (readonly)" />
 
                         <TextInput
                             id="lastname"
@@ -69,7 +69,7 @@ const submit = () => {
                     </div>
 
                     <div>
-                        <InputLabel for="email" value="Email" />
+                        <InputLabel for="email" value="Email (readonly)" />
 
                         <TextInput
                             id="email"
@@ -83,14 +83,11 @@ const submit = () => {
                     <div>
                         <InputLabel for="amount" value="Amount" />
 
-                        <TextInput
-                            id="amount"
-                            type="number"
-                            step="any"
-                            class="mt-1 block w-full"
-                            v-model="form.amount"
-                            required
-                            autofocus
+                        <input 
+                            type="number" 
+                            class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full" 
+                            step="any" 
+                            v-model="form.amount" 
                         />
 
                         <InputError class="mt-2" :message="form.errors.amount" />
