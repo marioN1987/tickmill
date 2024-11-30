@@ -100,7 +100,7 @@ class TransactionController extends Controller
 
         $transaction = Transaction::where('id', $request->id)->first();
         $transaction->amount = $request->amount;
-        $transaction->save();
+        $transaction->update();
 
         return redirect(route('transactions.list'));
     }
