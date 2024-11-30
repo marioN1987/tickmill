@@ -9,6 +9,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Client;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -77,12 +78,18 @@ class ClientController extends Controller
         $image->storeAs('avatars', $filename, 'public');
         
         // save client details in db
-        Client::create([
+        $client = Client::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'avatar' => $filename,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        //create transaction entry when new client is created
+        Transaction::create([
+            'client_id' => $client->id,
+            'amount' => 0
         ]);
 
         return redirect(route('clients.list'));
