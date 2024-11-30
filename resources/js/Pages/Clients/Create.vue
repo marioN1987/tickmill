@@ -46,7 +46,7 @@ const checkSize = (currFile) => {
     }
 }
 
-const isFormValid = computed(() => !form.fileSizeError && !Object.keys(form.errors).length > 0);
+const isFormValid = computed(() => !form.fileSizeError || !Object.keys(form.errors).length > 0);
 
 const submit = () => {
     form.post(route('clients.store'));

@@ -50,7 +50,8 @@ const changedValue = ($ev)=> {
                     <div>
                         <InputLabel for="client" value="Select client" />
 
-                        <SelectBox 
+                        <SelectBox
+                            class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
                             @change="changedValue($event)" 
                             :options="clientsList"
                         />
