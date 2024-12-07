@@ -9,5 +9,6 @@
 5. generate app key by typing => php artisan key:generate
 6. php artisan migrate => creates tables and relationships, but first will ask to create database if doesn't exist.
 7. php artisan db:seed => fill db tables with dummy data
-8. php artisan serve => shows that web server started, ex. INFO  Server running on [http://127.0.0.1:8000].
-9. open new terminal and type npm run dev => Running Vite Command to build Asset Files
+8. php artisan storage:link => will create symlink to "public" directory to your laravel project
+9. php artisan serve => shows that web server started, ex. INFO  Server running on [http://127.0.0.1:8000].
+10. open new terminal and type npm run dev => Running Vite Command to build Asset Files
